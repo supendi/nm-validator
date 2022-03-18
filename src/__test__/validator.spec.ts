@@ -368,7 +368,9 @@ describe("Validate Field Test", () => {
         const mustBePi: FieldRule = (errorMessage?: string) => {
             const c = 3.14;
             let msg = `The value must be ${c}`;
-
+            if (errorMessage) {
+                msg = errorMessage
+            }
             const validator: FieldValidator = {
                 errorMessage: msg,
                 validate: (value: any, objRef?: any): boolean => {
