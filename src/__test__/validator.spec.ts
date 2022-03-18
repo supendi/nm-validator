@@ -1,4 +1,4 @@
-import { ValidationResult, ValidationRules, validator } from '../index'
+import { FieldRule, FieldValidator, ValidationResult, ValidationRules, validator } from '../index'
 import { required, minLength, emailAddress, maxLength, maxNumber, minNumber, regularExpression, equal, elementOf } from '../validators'
 
 interface Registrant {
@@ -357,6 +357,53 @@ describe("Validate Field Test", () => {
             },
             errors: {
                 email: "Email is required. Invalid email address."
+            }
+        }
+        // console.error(actual)
+        expect(actual).toEqual(expected)
+    })
+    
+    
+    it("should return 1 error of pi.value", () => {
+        const mustBePi: FieldRule = (errorMessage?: string) => {
+            const c = 3.14;
+            let msg = `The value must be ${c}`;
+
+            const validator: FieldValidator = {
+                errorMessage: msg,
+                validate: (value: any, objRef?: any): boolean => {
+                    return value === c;
+                },
+            };
+            return validator;
+        };
+
+        const pi = {
+            value: 3.13,
+        };
+
+        const validationRule: ValidationRules = {
+            value: [mustBePi()],
+        };
+
+        //only validate the email field
+        const validationResult = validator.validateObject(
+            pi,
+            validationRule
+        );
+
+        const actual = validator.validateObject(pi, validationRule)
+        const expected: ValidationResult<{
+            value: string,
+        }> = {
+            isValid: false,
+            errorMessages: {
+                value: [
+                    "The value must be 3.14"
+                ],
+            },
+            errors: {
+                value: "The value must be 3.14",
             }
         }
         // console.error(actual)
