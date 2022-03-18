@@ -1,0 +1,39 @@
+{
+    "name": "nm-validator",
+    "version": "1.0.12",
+    "description": "Simple json validator by using user-defined validation rules",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "/dist"
+    ],
+    "scripts": {
+        "test": "jest",
+        "clean": "rm -rf ./dist",
+        "deep-clean": "rm -rf ./dist && rm -rf node_modules",
+        "build": "yarn clean && tsc"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/supendi/nm-validator.git"
+    },
+    "keywords": [
+        "validator",
+        "json validator"
+    ],
+    "author": "github.com/supendi",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/supendi/nm-validator/issues"
+    },
+    "homepage": "https://github.com/supendi/nm-validator#readme",
+    "devDependencies": {
+        "@babel/core": "^7.13.16",
+        "@babel/preset-env": "^7.13.15",
+        "@babel/preset-typescript": "^7.13.0",
+        "@types/jest": "^26.0.22",
+        "babel-jest": "^26.6.3",
+        "jest": "^26.6.3"
+    },
+    "dependencies": {}
+}
