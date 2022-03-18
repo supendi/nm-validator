@@ -26,6 +26,7 @@ const company = {
   },
 };
 
+//Deep validation
 const rules: ValidationRules = {
   name: [required("Name is required")],
   address: {
@@ -107,4 +108,48 @@ const validationResult = validator.validateField(
 //         email: "Email is required. Invalid email address."
 //     }
 // }
+```
+
+**Example 3 : Create your own field rule**
+
+```javascript
+import { validator } from "nm-validator";
+
+//This is our custom field rule, should return the FieldValidator interface
+const mustBePi: FieldRule = (errorMessage?: string) => {
+  const c = 3.14;
+  let msg = `The value must be ${c}`;
+  if (errorMessage) {
+    msg = errorMessage;
+  }
+  const validator: FieldValidator = {
+    errorMessage: msg,
+    validate: (value: any, objRef?: any): boolean => {
+      return value === c;
+    },
+  };
+  return validator;
+};
+
+const pi = {
+  value: 3.13,
+};
+
+const validationRule: ValidationRules = {
+  value: [mustBePi()],
+};
+
+//only validate the email field
+const validationResult = validator.validateObject(pi, validationRule);
+
+//Output
+// validationResult = {
+//   isValid: false,
+//   errorMessages: {
+//     value: ["The value must be 3.14"],
+//   },
+//   errors: {
+//     value: "The value must be 3.14",
+//   },
+// };
 ```
