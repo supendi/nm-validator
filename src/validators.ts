@@ -1,23 +1,31 @@
 import { FieldValidator, FieldRule } from '.'
 
-const addDot = (input: string) => {
+/** 
+ * Appends a dot (.) to the input string
+*/
+export const appendDot = (input: string) => {
     if (!input) {
         return input
     }
     const symbols = ["!", ".", "?", ";"]
-    const endedWithDot = symbols.find(x => x === input.substring(input.length - 1))
-    if (!endedWithDot) {
+    const endedWithSymbol = symbols.find(x => x === input.substring(input.length - 1))
+    if (!endedWithSymbol) {
         input = input + "."
     }
     return input
 }
 
+/**
+ * Returns a required validation rule
+ * @param errorMessage Custom error messages
+ * @returns 
+ */
 export const required: FieldRule = (errorMessage?: string) => {
     let msg = "This field is required"
     if (errorMessage) {
         msg = errorMessage
     }
-    msg = addDot(msg)
+    msg = appendDot(msg)
 
     const validator: FieldValidator = {
         errorMessage: msg,
@@ -31,6 +39,11 @@ export const required: FieldRule = (errorMessage?: string) => {
     return validator
 }
 
+/**
+ * Returns a minimum number validation rule
+ * @param errorMessage Custom error messages
+ * @returns 
+ */
 export const minNumber: FieldRule = (min: number, errorMessage?: string) => {
 
     let msg = `The minimum value for this field is ${min}`
@@ -38,7 +51,7 @@ export const minNumber: FieldRule = (min: number, errorMessage?: string) => {
         msg = errorMessage
     }
 
-    msg = addDot(msg)
+    msg = appendDot(msg)
 
     const validator: FieldValidator = {
         validate: (value: number, objRef?: any): boolean => {
@@ -54,13 +67,18 @@ export const minNumber: FieldRule = (min: number, errorMessage?: string) => {
     return validator
 }
 
+/**
+ * Returns a maximum number validation rule
+ * @param errorMessage Custom error messages
+ * @returns 
+ */
 export const maxNumber: FieldRule = (max: number, errorMessage?: string) => {
     let msg = `The maximum value for this field is ${max}`
     if (errorMessage) {
         msg = errorMessage
     }
 
-    msg = addDot(msg)
+    msg = appendDot(msg)
 
     const validator: FieldValidator = {
         validate: (value: number, objRef?: any): boolean => {
@@ -76,6 +94,11 @@ export const maxNumber: FieldRule = (max: number, errorMessage?: string) => {
     return validator
 }
 
+/**
+ * Returns a minimum length validation rule
+ * @param errorMessage Custom error messages
+ * @returns 
+ */
 export const minLength: FieldRule = (min: number, errorMessage?: string) => {
 
     let msg = `The minimum length for this field is ${min}`
@@ -83,7 +106,7 @@ export const minLength: FieldRule = (min: number, errorMessage?: string) => {
         msg = errorMessage
     }
 
-    msg = addDot(msg)
+    msg = appendDot(msg)
 
     const validator: FieldValidator = {
         validate: (value: any, objRef?: any): boolean => {
@@ -103,6 +126,11 @@ export const minLength: FieldRule = (min: number, errorMessage?: string) => {
     return validator
 }
 
+/**
+ * Returns a maximum length validation rule
+ * @param errorMessage Custom error messages
+ * @returns 
+ */
 export const maxLength: FieldRule = (max: number, errorMessage?: string) => {
 
     let msg = `The maximum length for this field is ${max}`
@@ -110,7 +138,7 @@ export const maxLength: FieldRule = (max: number, errorMessage?: string) => {
         msg = errorMessage
     }
 
-    msg = addDot(msg)
+    msg = appendDot(msg)
 
     const validator: FieldValidator = {
         validate: (value: any, objRef?: any): boolean => {
@@ -130,13 +158,18 @@ export const maxLength: FieldRule = (max: number, errorMessage?: string) => {
     return validator
 }
 
+/**
+ * Returns the email address validation rule
+ * @param errorMessage Custom error messages
+ * @returns 
+ */
 export const emailAddress: FieldRule = (errorMessage?: string) => {
     let msg = `Invalid email address. The valid email example: john.doe@example.com`
     if (errorMessage) {
         msg = errorMessage
     }
 
-    msg = addDot(msg)
+    msg = appendDot(msg)
 
     const validator: FieldValidator = {
         validate: (value: string, objRef?: any): boolean => {
@@ -151,13 +184,18 @@ export const emailAddress: FieldRule = (errorMessage?: string) => {
     return validator
 }
 
+/**
+ * Returns a regex validation rule
+ * @param errorMessage Custom error messages
+ * @returns 
+ */
 export const regularExpression: FieldRule = (regex: RegExp, errorMessage: string) => {
     let msg = `The value ':value' doesn't match to the regular expression spesification`
     if (errorMessage) {
         msg = errorMessage
     }
 
-    msg = addDot(msg)
+    msg = appendDot(msg)
 
     const validator: FieldValidator = {
         validate: (value: any, objRef?: any): boolean => {
@@ -168,13 +206,18 @@ export const regularExpression: FieldRule = (regex: RegExp, errorMessage: string
     return validator
 }
 
+/**
+ * Returns a validation rule, which value should be equal to the specified field
+ * @param errorMessage Custom error messages
+ * @returns 
+ */
 export const equal: FieldRule = (equalToFieldName: string, errorMessage: string) => {
     let msg = `The value should be equal to ${equalToFieldName} value`
     if (errorMessage) {
         msg = errorMessage
     }
 
-    msg = addDot(msg)
+    msg = appendDot(msg)
     const validator: FieldValidator = {
         validate: (value: any, objRef?: any): boolean => {
             return value === objRef[equalToFieldName]
@@ -184,6 +227,11 @@ export const equal: FieldRule = (equalToFieldName: string, errorMessage: string)
     return validator
 }
 
+/**
+ * Returns a validation rule, which value should be one of element of the specified array
+ * @param errorMessage Custom error messages
+ * @returns 
+ */
 export const elementOf: FieldRule = <T>(list: T[], errorMessage: string) => {
     if (!list) {
         console.error(`Validator: the list is ${list}`)
@@ -193,7 +241,7 @@ export const elementOf: FieldRule = <T>(list: T[], errorMessage: string) => {
         msg = errorMessage
     }
 
-    msg = addDot(msg)
+    msg = appendDot(msg)
     const validator: FieldValidator = {
         validate: (value: any, objRef?: any): boolean => {
             if (!list) {
