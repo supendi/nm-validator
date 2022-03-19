@@ -12,7 +12,7 @@
         "clean": "rm -rf ./dist",
         "deep-clean": "rm -rf ./dist && rm -rf node_modules",
         "build": "yarn clean && tsc",
-        "release":"yarn build && yarn test && npm version patch && git push && npm publish"
+        "release-package":"yarn build && yarn test && npm version patch && git push && npm publish"
     },
     "repository": {
         "type": "git",
