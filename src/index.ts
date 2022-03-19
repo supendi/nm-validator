@@ -60,6 +60,64 @@ export type ValidationResult<T> = {
 }
 
 /**
+ * Get property value of an object. Supports deep get value such (company.address.streetName).
+ */
+ const getValue = (o, fieldName: string) => {
+    let index = 0
+    const splittedFieldNames = fieldName.split(".")
+    if (!!splittedFieldNames && splittedFieldNames.length > 1) {
+        const key = splittedFieldNames[index]
+        const value = o[key]
+        while (index < splittedFieldNames.length) {
+            index++
+            var nextField = fieldName.replace(key + ".", "")
+            return getValue(value, nextField)
+        }
+        return value
+    }
+    if (!Object.prototype.hasOwnProperty.call(o, fieldName)) {
+        console.error(`nm-validator: The field name '${fieldName}' doesn't exist in the object to be validated`)
+        return undefined
+    }
+    return o[fieldName]
+}
+
+/**
+ * Set property value of an object. Supports deep set value such (company.address.streetName).
+ */
+const setValue = (o, fieldName: string, value) => {
+    let index = 0
+
+    const splittedFieldNames = fieldName.split(".")
+    if (!!splittedFieldNames && splittedFieldNames.length > 1) {
+        const key = splittedFieldNames[index]
+
+        while (index < splittedFieldNames.length) {
+            index++
+            var nextFieldNames = fieldName.replace(key + ".", "")
+            if (!o[key]) {
+                o[key] = {}
+                setValue(o[key], nextFieldNames, value)
+            }
+        }
+        if (!o[key]) {
+            o[key] = []
+        }
+        if (o[key].push) {
+            o[key].push(value)
+        }
+
+        return
+    }
+
+    if (!o[fieldName]) {
+        o[fieldName] = []
+    }
+
+    o[fieldName].push(value)
+}
+
+/**
  * Validates an object by the specified rules
  * @param obj the object to be validated
  * @param validationRules the validation rules
@@ -69,7 +127,7 @@ const validateObject = <T>(obj: any, validationRules: ValidationRules): Validati
     var errors: Errors = undefined
     for (const fieldName in validationRules) {
         if (!Object.prototype.hasOwnProperty.call(obj, fieldName)) {
-            console.error(`Validator2: The field name '${fieldName}' doesnt exists in the object to be validated`)
+            console.error(`nm-validator: The field name '${fieldName}' doesnt exists in the object to be validated`)
             continue;
         }
         const fieldValidators = validationRules[fieldName]
@@ -123,32 +181,36 @@ const validateObject = <T>(obj: any, validationRules: ValidationRules): Validati
  * @param validationRules the validation rules
  * @returns 
  */
-const validateField = <T, E>(obj: T, fieldName: string, validationRules: ValidationRules): ValidationResult<E> => {
+const validateField = <T, E>(obj: T, fieldName: string, validationRules: ValidationRules): ValidationResult<E> | undefined => {
     var errors: Errors = undefined
-    if (!Object.prototype.hasOwnProperty.call(obj, fieldName)) {
-        console.error(`Validator2: The field name '${fieldName}' doesnt exists in the object to be validated`)
-        return
+    if (!fieldName) {
+        console.error("nm-validator: The fieldName argument is required")
+        return undefined
     }
-    const fieldValidators = validationRules[fieldName]
+
+    let fieldValidators: FieldValidator[] | { [x: string]: any }
+
+    fieldValidators = getValue(validationRules, fieldName)
     if (fieldValidators) {
         for (let index = 0; index < fieldValidators.length; index++) {
             const fieldValidator = fieldValidators[index]
-            const value = obj[fieldName]
+
+            const value = getValue(obj, fieldName)
+           
             if (fieldValidator && fieldValidator.validate) {
                 const isValid = fieldValidator.validate(value, obj)
                 if (!isValid) {
                     if (!errors) {
                         errors = {}
                     }
-                    if (!errors[fieldName]) {
-                        errors[fieldName] = []
-                    }
+               
                     var errorMessage = fieldValidator.errorMessage
                     if (fieldValidator.errorMessage) {
                         errorMessage = fieldValidator.errorMessage.replace(":value", value)
                     }
+
                     if (!Array.isArray(fieldValidator.errorMessage)) {
-                        (errors[fieldName] as string[]).push(errorMessage)
+                        setValue(errors, fieldName, errorMessage)
                     }
                 }
             }

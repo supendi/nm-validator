@@ -344,6 +344,7 @@ describe("Validate Field Test", () => {
 
         //only validate the email field
         const actual = validator.validateField(registrant, "email", validationRule)
+      
         //Should only return the email errors only
         const expected: ValidationResult<{
             email: string
@@ -362,8 +363,7 @@ describe("Validate Field Test", () => {
         // console.error(actual)
         expect(actual).toEqual(expected)
     })
-    
-    
+
     it("should return 1 error of pi.value", () => {
         const mustBePi: FieldRule = (errorMessage?: string) => {
             const c = 3.14;
@@ -387,7 +387,7 @@ describe("Validate Field Test", () => {
         const validationRule: ValidationRules = {
             value: [mustBePi()],
         };
- 
+
         const actual = validator.validateObject(pi, validationRule)
         const expected: ValidationResult<{
             value: string,
@@ -465,6 +465,64 @@ describe("Deep Validate Object Test", () => {
                 address: {
                     streetName: "The street name is required.",
                     country: "The value 'UK' is not the element of [US,FR,JP,ID].",
+                    person: {
+                        age: "The minimum value for this field is 17."
+                    }
+                }
+            }
+        }
+        // console.error(actual)
+        expect(actual).toEqual(expected)
+    })
+})
+
+describe("Deep Validate Field Test", () => {
+    it("should return 1 error of name", () => {
+        const company = {
+            name: "",
+            email: "irpan2gmail.com",
+            address: {
+                streetName: "",
+                country: "UK",
+                person: {
+                    age: 15
+                }
+            }
+        }
+
+        const rules: ValidationRules = {
+            name: [required("Name is required")],
+            address: {
+                streetName: [
+                    required("The street name is required")
+                ],
+                country: [
+                    elementOf(["US,FR,JP,ID"])
+                ],
+                person: {
+                    age: [minNumber(17)]
+                }
+            }
+        }
+
+        const actual = validator.validateField(company, "address.person.age", rules)
+        const expected: ValidationResult<{
+            address: {
+                person: {
+                    age: string
+                }
+            }
+        }> = {
+            isValid: false,
+            errorMessages: {
+                address: {
+                    person: {
+                        age: ["The minimum value for this field is 17."]
+                    }
+                }
+            },
+            errors: {
+                address: {
                     person: {
                         age: "The minimum value for this field is 17."
                     }
