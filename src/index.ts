@@ -4,7 +4,7 @@
  * @param errors the errors to be joined as a single string
  * @returns 
  */
-const joinErrors = <T>(errors: Errors): T => {
+const joinErrors = <TError>(errors: Errors): TError => {
     var joinedErrors: any = undefined
     for (const key in errors) {
         if (Object.prototype.hasOwnProperty.call(errors, key)) {
@@ -16,12 +16,12 @@ const joinErrors = <T>(errors: Errors): T => {
                 joinedErrors[key] = errorMessages.join(" ")
             } else {
                 if (typeof (errorMessages) === "object") {
-                    joinedErrors[key] = joinErrors<T>(errorMessages)
+                    joinedErrors[key] = joinErrors<TError>(errorMessages)
                 }
             }
         }
     }
-    var result = joinedErrors as T
+    var result = joinedErrors as TError
     return result
 }
 
@@ -53,16 +53,16 @@ export type Errors = { [y in keyof any]: string[] | { [y in keyof Errors] } }
 /**
  * Represents the model of validation result returned by the validateObject and the validationField method
  */
-export type ValidationResult<T> = {
+export type ValidationResult<TError> = {
     isValid: boolean,
     errorMessages: Errors,
-    errors: T
+    errors: TError
 }
 
 /**
  * Get property value of an object. Supports deep get value such (company.address.streetName).
  */
- const getValue = (o, fieldName: string) => {
+const getValue = (o, fieldName: string) => {
     let index = 0
     const splittedFieldNames = fieldName.split(".")
     if (!!splittedFieldNames && splittedFieldNames.length > 1) {
@@ -123,7 +123,7 @@ const setValue = (o, fieldName: string, value) => {
  * @param validationRules the validation rules
  * @returns 
  */
-const validateObject = <T>(obj: any, validationRules: ValidationRules): ValidationResult<T> => {
+const validateObject = <TError>(obj: any, validationRules: ValidationRules): ValidationResult<TError> => {
     var errors: Errors = undefined
     for (const fieldName in validationRules) {
         if (!Object.prototype.hasOwnProperty.call(obj, fieldName)) {
@@ -171,7 +171,7 @@ const validateObject = <T>(obj: any, validationRules: ValidationRules): Validati
     return {
         isValid: errors ? false : true,
         errorMessages: errors,
-        errors: joinErrors<T>(errors)
+        errors: joinErrors<TError>(errors)
     }
 }
 
@@ -181,7 +181,7 @@ const validateObject = <T>(obj: any, validationRules: ValidationRules): Validati
  * @param validationRules the validation rules
  * @returns 
  */
-const validateField = <T, E>(obj: T, fieldName: string, validationRules: ValidationRules): ValidationResult<E> | undefined => {
+const validateField = <TError>(obj: any, fieldName: string, validationRules: ValidationRules): ValidationResult<TError> | undefined => {
     var errors: Errors = undefined
     if (!fieldName) {
         console.error("nm-validator: The fieldName argument is required")
@@ -196,14 +196,14 @@ const validateField = <T, E>(obj: T, fieldName: string, validationRules: Validat
             const fieldValidator = fieldValidators[index]
 
             const value = getValue(obj, fieldName)
-           
+
             if (fieldValidator && fieldValidator.validate) {
                 const isValid = fieldValidator.validate(value, obj)
                 if (!isValid) {
                     if (!errors) {
                         errors = {}
                     }
-               
+
                     var errorMessage = fieldValidator.errorMessage
                     if (fieldValidator.errorMessage) {
                         errorMessage = fieldValidator.errorMessage.replace(":value", value)
@@ -219,7 +219,7 @@ const validateField = <T, E>(obj: T, fieldName: string, validationRules: Validat
     return {
         isValid: errors ? false : true,
         errorMessages: errors,
-        errors: joinErrors<E>(errors)
+        errors: joinErrors<TError>(errors)
     }
 }
 
