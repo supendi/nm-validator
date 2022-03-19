@@ -11,7 +11,8 @@
         "test": "jest",
         "clean": "rm -rf ./dist",
         "deep-clean": "rm -rf ./dist && rm -rf node_modules",
-        "build": "yarn clean && tsc"
+        "build": "yarn clean && tsc",
+        "release":"yarn build && yarn test && npm version patch && git push && npm publish"
     },
     "repository": {
         "type": "git",
