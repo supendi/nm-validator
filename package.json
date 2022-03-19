@@ -1,6 +1,6 @@
 {
     "name": "nm-validator",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Simple json validator by using user-defined validation rules",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
