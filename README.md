@@ -139,7 +139,6 @@ const validationRule: ValidationRules = {
   value: [mustBePi()],
 };
 
-//only validate the email field
 const validationResult = validator.validateObject(pi, validationRule);
 
 //Output
