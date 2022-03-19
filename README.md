@@ -152,3 +152,61 @@ const validationResult = validator.validateObject(pi, validationRule);
 //   },
 // };
 ```
+
+**Example 4 : Deep validate spesific field**
+
+```javascript
+import { validator } from "nm-validator";
+import {
+  emailAddress,
+  equal,
+  minLength,
+  required,
+  regularExpression,
+} from "nm-validator/dist/validators";
+
+const company = {
+  name: "",
+  email: "irpan2gmail.com",
+  address: {
+    streetName: "",
+    country: "UK",
+    person: {
+      age: 15,
+    },
+  },
+};
+
+const rules: ValidationRules = {
+  name: [required("Name is required")],
+  address: {
+    streetName: [required("The street name is required")],
+    country: [elementOf(["US,FR,JP,ID"])],
+    person: {
+      age: [minNumber(17)],
+    },
+  },
+};
+
+//Validate only the age value 
+const actual = validator.validateField(company, "address.person.age", rules);
+
+//Output
+//  validationResult = {
+//   isValid: false,
+//   errorMessages: {
+//     address: {
+//       person: {
+//         age: ["The minimum value for this field is 17."],
+//       },
+//     },
+//   },
+//   errors: {
+//     address: {
+//       person: {
+//         age: "The minimum value for this field is 17.",
+//       },
+//     },
+//   },
+// };
+```
