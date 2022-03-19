@@ -387,13 +387,7 @@ describe("Validate Field Test", () => {
         const validationRule: ValidationRules = {
             value: [mustBePi()],
         };
-
-        //only validate the email field
-        const validationResult = validator.validateObject(
-            pi,
-            validationRule
-        );
-
+ 
         const actual = validator.validateObject(pi, validationRule)
         const expected: ValidationResult<{
             value: string,
