@@ -1,4 +1,14 @@
 # nm-validator
+Validate your json object 
+
+## Installation
+```
+npm i nm-validator
+```
+or
+```
+yarn add nm-validator
+```
 
 ## Usage
 
