@@ -407,7 +407,7 @@ describe("Validate Field Test", () => {
     })
 })
 
-describe("Validate Deep Object Test", () => {
+describe("Deep Validate Object Test", () => {
     it("should return 1 error of name", () => {
         const company = {
             name: "",
