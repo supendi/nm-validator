@@ -110,7 +110,7 @@ const validationResult = validator.validateField(
 // }
 ```
 
-**Example 3 : Create your own field rule**
+**Example 3 : Create and use your own field rule**
 
 ```javascript
 import { validator } from "nm-validator";
