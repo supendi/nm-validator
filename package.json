@@ -10,7 +10,9 @@
     "scripts": {
         "test": "jest",
         "clean": "rm -rf ./dist",
-        "deep-clean": "rm -rf ./dist && rm -rf node_modules",
+        "clean-test": "yarn clean && yarn test",
+        "deep-clean": "yarn clean && rm -rf node_modules",
+        "deep-clean-test": "yarn deep-clean && yarn install && yarn test",
         "build": "yarn deep-clean && yarn install && tsc",
         "version-patch": "yarn build && yarn test && npm version patch && git push"
     },
