@@ -9,6 +9,10 @@ export type EmailAddressRule = (errorMessage?: string) => FieldValidator
 export type RegularExpressionRule = (regex: RegExp, errorMessage?: string) => FieldValidator
 export type EqualToRule = (equalToFieldName: string, errorMessage?: string) => FieldValidator
 export type ElementOfRule = <T>(list: T[], errorMessage?: string) => FieldValidator
+export type ContainUpperLowerCaseRule = (errorMessage?: string) => FieldValidator
+export type ContainNumberRule = (errorMessage?: string) => FieldValidator
+export type ContainSpecialCharRule = (errorMessage?: string) => FieldValidator
+export type StrongPasswordRule = (errorMessage?: string) => FieldValidator
 
 /** 
  * Appends a dot (.) to the input string
@@ -264,4 +268,20 @@ export const elementOf: ElementOfRule = <T>(list: T[], errorMessage?: string) =>
         errorMessage: msg
     }
     return validator
+}
+
+export const containUpperLowerCase: ContainUpperLowerCaseRule = (errorMessage?: string) => {
+    return regularExpression(/^(?=.*[a-z])(?=.*[A-Z])/, errorMessage)
+}
+
+export const containNumber: ContainNumberRule = (errorMessage?: string) => {
+    return regularExpression(/^(?=.*\d)/, errorMessage)
+}
+
+export const containSpecialChar: ContainSpecialCharRule = (errorMessage?: string) => {
+    return regularExpression(/^(?=.*[^a-zA-Z\d])([A-Za-z\d]|[^a-zA-Z\d])/, errorMessage)
+}
+
+export const strongPasswordRule: StrongPasswordRule = (errorMessage?: string) => {
+    return regularExpression(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])([A-Za-z\d]|[^a-zA-Z\d]){8,}$/, errorMessage)
 }
