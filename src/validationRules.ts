@@ -1,3 +1,7 @@
+/**
+ * Contains built in validation rules
+ */
+
 import { FieldValidator } from '.'
 
 export type RequiredRule = (errorMessage?: string) => FieldValidator
