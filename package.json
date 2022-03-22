@@ -11,7 +11,7 @@
         "test": "jest",
         "clean": "rm -rf ./dist",
         "deep-clean": "rm -rf ./dist && rm -rf node_modules",
-        "build": "yarn clean && tsc",
+        "build": "yarn deep-clean && yarn install && tsc",
         "release-package": "yarn build && yarn test && npm version patch && git push && npm publish"
     },
     "repository": {
@@ -20,7 +20,9 @@
     },
     "keywords": [
         "validator",
-        "json validator"
+        "json validator",
+        "js validator",
+        "javascript validator"
     ],
     "author": "github.com/supendi",
     "license": "ISC",
