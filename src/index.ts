@@ -37,18 +37,12 @@ export type FieldValidator = {
  * Represents a collection of validation rules.
  * The validation schema should implement this type.
  */
-export type ValidationRules = { [y in keyof any]: FieldValidator[] | { [y in keyof ValidationRules] } }
-
-/**
- * Represents the function type signature of field rule.
- * If you want to create your own field validation rule, your function should match to this type signature.
- */
-export type FieldRule = (...args: any[]) => FieldValidator
+export type ValidationRules = { [y in keyof any]: FieldValidator[] | { [y in keyof ValidationRules]: any } }
 
 /**
  * Represents the errors model of the validation result
  */
-export type Errors = { [y in keyof any]: string[] | { [y in keyof Errors] } }
+export type Errors = { [y in keyof any]: string[] | { [y in keyof Errors]: any } }
 
 /**
  * Represents the model of validation result returned by the validateObject and the validationField method

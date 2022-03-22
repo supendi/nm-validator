@@ -1,5 +1,5 @@
-import { FieldRule, FieldValidator, ValidationResult, ValidationRules, validator } from '../index'
-import { required, minLength, emailAddress, maxLength, maxNumber, minNumber, regularExpression, equal, elementOf } from '../validators'
+import { FieldValidator, ValidationResult, ValidationRules, validator } from '../index'
+import { required, minLength, emailAddress, maxLength, maxNumber, minNumber, regularExpression, equalTo, elementOf } from '../validationRules'
 
 interface Registrant {
     name: string,
@@ -300,7 +300,7 @@ describe("Validate Object Test", () => {
 
         const validationRule: ValidationRules = {
             confirmPassword: [
-                equal("password")
+                equalTo("password")
             ],
         }
 
@@ -344,7 +344,7 @@ describe("Validate Field Test", () => {
 
         //only validate the email field
         const actual = validator.validateField(registrant, "email", validationRule)
-      
+
         //Should only return the email errors only
         const expected: ValidationResult<{
             email: string
@@ -365,7 +365,7 @@ describe("Validate Field Test", () => {
     })
 
     it("should return 1 error of pi.value", () => {
-        const mustBePi: FieldRule = (errorMessage?: string) => {
+        const mustBePi: (errorMessage?: string) => FieldValidator = (errorMessage?: string) => {
             const c = 3.14;
             let msg = `The value must be ${c}`;
             if (errorMessage) {

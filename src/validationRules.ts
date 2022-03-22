@@ -1,4 +1,14 @@
-import { FieldValidator, FieldRule } from '.'
+import { FieldValidator } from '.'
+
+export type RequiredRule = (errorMessage?: string) => FieldValidator
+export type MinNumberRule = (min: number, errorMessage?: string) => FieldValidator
+export type MaxNumberRule = (max: number, errorMessage?: string) => FieldValidator
+export type MinLengthRule = (min: number, errorMessage?: string) => FieldValidator
+export type MaxLengthRule = (max: number, errorMessage?: string) => FieldValidator
+export type EmailAddressRule = (errorMessage?: string) => FieldValidator
+export type RegularExpressionRule = (regex: RegExp, errorMessage?: string) => FieldValidator
+export type EqualToRule = (equalToFieldName: string, errorMessage?: string) => FieldValidator
+export type ElementOfRule = <T>(list: T[], errorMessage?: string) => FieldValidator
 
 /** 
  * Appends a dot (.) to the input string
@@ -20,7 +30,7 @@ export const appendDot = (input: string) => {
  * @param errorMessage Custom error messages
  * @returns 
  */
-export const required: FieldRule = (errorMessage?: string) => {
+export const required: RequiredRule = (errorMessage?: string) => {
     let msg = "This field is required"
     if (errorMessage) {
         msg = errorMessage
@@ -44,7 +54,7 @@ export const required: FieldRule = (errorMessage?: string) => {
  * @param errorMessage Custom error messages
  * @returns 
  */
-export const minNumber: FieldRule = (min: number, errorMessage?: string) => {
+export const minNumber: MinNumberRule = (min: number, errorMessage?: string) => {
 
     let msg = `The minimum value for this field is ${min}`
     if (errorMessage) {
@@ -72,7 +82,7 @@ export const minNumber: FieldRule = (min: number, errorMessage?: string) => {
  * @param errorMessage Custom error messages
  * @returns 
  */
-export const maxNumber: FieldRule = (max: number, errorMessage?: string) => {
+export const maxNumber: MaxNumberRule = (max: number, errorMessage?: string) => {
     let msg = `The maximum value for this field is ${max}`
     if (errorMessage) {
         msg = errorMessage
@@ -99,7 +109,7 @@ export const maxNumber: FieldRule = (max: number, errorMessage?: string) => {
  * @param errorMessage Custom error messages
  * @returns 
  */
-export const minLength: FieldRule = (min: number, errorMessage?: string) => {
+export const minLength: MinLengthRule = (min: number, errorMessage?: string) => {
 
     let msg = `The minimum length for this field is ${min}`
     if (errorMessage) {
@@ -131,7 +141,7 @@ export const minLength: FieldRule = (min: number, errorMessage?: string) => {
  * @param errorMessage Custom error messages
  * @returns 
  */
-export const maxLength: FieldRule = (max: number, errorMessage?: string) => {
+export const maxLength: MaxLengthRule = (max: number, errorMessage?: string) => {
 
     let msg = `The maximum length for this field is ${max}`
     if (errorMessage) {
@@ -163,7 +173,7 @@ export const maxLength: FieldRule = (max: number, errorMessage?: string) => {
  * @param errorMessage Custom error messages
  * @returns 
  */
-export const emailAddress: FieldRule = (errorMessage?: string) => {
+export const emailAddress: EmailAddressRule = (errorMessage?: string) => {
     let msg = `Invalid email address. The valid email example: john.doe@example.com`
     if (errorMessage) {
         msg = errorMessage
@@ -189,7 +199,7 @@ export const emailAddress: FieldRule = (errorMessage?: string) => {
  * @param errorMessage Custom error messages
  * @returns 
  */
-export const regularExpression: FieldRule = (regex: RegExp, errorMessage: string) => {
+export const regularExpression: RegularExpressionRule = (regex: RegExp, errorMessage?: string) => {
     let msg = `The value ':value' doesn't match to the regular expression spesification`
     if (errorMessage) {
         msg = errorMessage
@@ -211,7 +221,7 @@ export const regularExpression: FieldRule = (regex: RegExp, errorMessage: string
  * @param errorMessage Custom error messages
  * @returns 
  */
-export const equal: FieldRule = (equalToFieldName: string, errorMessage: string) => {
+export const equalTo: EqualToRule = (equalToFieldName: string, errorMessage?: string) => {
     let msg = `The value should be equal to ${equalToFieldName} value`
     if (errorMessage) {
         msg = errorMessage
@@ -232,7 +242,7 @@ export const equal: FieldRule = (equalToFieldName: string, errorMessage: string)
  * @param errorMessage Custom error messages
  * @returns 
  */
-export const elementOf: FieldRule = <T>(list: T[], errorMessage: string) => {
+export const elementOf: ElementOfRule = <T>(list: T[], errorMessage?: string) => {
     if (!list) {
         console.error(`Validator: the list is ${list}`)
     }
