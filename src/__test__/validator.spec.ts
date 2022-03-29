@@ -319,6 +319,32 @@ describe("Validate Object Test", () => {
         // console.error(actual)
         expect(actual).toEqual(expected)
     })
+
+    it("Test missing property but required", () => {
+        const registrant: Registrant & any = {
+            names: "",
+        } 
+        const rules: ValidationRules<Registrant> = {
+            name: [required("Name is required")]
+        }
+
+        const actual = validator.validateObject(registrant, rules)
+        const expected: ValidationResult<{
+            name: string,
+        }> = {
+            isValid: false,
+            errorMessages: {
+                name: [
+                    "Name is required."
+                ],
+            },
+            errors: {
+                name: "Name is required.",
+            }
+        }
+        // console.error(actual)
+        expect(actual).toEqual(expected)
+    })
 })
 
 

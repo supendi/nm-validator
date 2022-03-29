@@ -120,12 +120,8 @@ const setValue = (o, fieldName: string, value) => {
 const validateObject = <T, TError>(obj: any, validationRules: ValidationRules<T>): ValidationResult<TError> => {
     var errors: Errors = undefined
     for (const fieldName in validationRules) {
-        if (!Object.prototype.hasOwnProperty.call(obj, fieldName)) {
-            console.error(`nm-validator: The field name '${fieldName}' doesnt exists in the object to be validated`)
-            continue;
-        }
         const fieldValidators = validationRules[fieldName]
-
+ 
         if (!Array.isArray(fieldValidators)) {
             if (!errors) {
                 errors = {}
