@@ -22,7 +22,7 @@ import {
   minLength,
   required,
   regularExpression,
-} from "nm-validator/dist/validators";
+} from "nm-validator/dist/validationRules";
 
 const company = {
   name: "",
@@ -37,7 +37,7 @@ const company = {
 };
 
 //Deep validation
-const rules: ValidationRules = {
+const rules: ValidationRules<typeof company> = {
   name: [required("Name is required")],
   address: {
     streetName: [required("The street name is required")],
@@ -85,7 +85,7 @@ import {
   minLength,
   required,
   regularExpression,
-} from "nm-validator/dist/validators";
+} from "nm-validator/dist/validationRules";
 
 const registrant: Registrant = {
   name: "",
@@ -94,7 +94,7 @@ const registrant: Registrant = {
   confirmPassword: "",
 };
 
-const validationRule: ValidationRules = {
+const validationRule: ValidationRules<Registrant> = {
   name: [required("Name is required"), minLength(3, "The minimum length is 3")],
   email: [required("Email is required"), emailAddress("Invalid email address")],
 };
@@ -173,7 +173,7 @@ import {
   minLength,
   required,
   regularExpression,
-} from "nm-validator/dist/validators";
+} from "nm-validator/dist/validationRules";
 
 const company = {
   name: "",
@@ -187,7 +187,7 @@ const company = {
   },
 };
 
-const rules: ValidationRules = {
+const rules: ValidationRules<typeof company> = {
   name: [required("Name is required")],
   address: {
     streetName: [required("The street name is required")],
