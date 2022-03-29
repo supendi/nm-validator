@@ -33,11 +33,15 @@ export type FieldValidator = {
     errorMessage: string
 }
 
+type KeyOf<T> = { [a in keyof T]?: FieldValidator[]
+    |
+    { [b in keyof KeyOf<T[a]>]?} }
+
 /**
  * Represents a collection of validation rules.
  * The validation schema should implement this type.
  */
-export type ValidationRules = { [y in keyof any]: FieldValidator[] | { [y in keyof ValidationRules]: any } }
+export type ValidationRules<T> = KeyOf<T>
 
 /**
  * Represents the errors model of the validation result
@@ -117,7 +121,7 @@ const setValue = (o, fieldName: string, value) => {
  * @param validationRules the validation rules
  * @returns 
  */
-const validateObject = <TError>(obj: any, validationRules: ValidationRules): ValidationResult<TError> => {
+const validateObject = <T, TError>(obj: any, validationRules: ValidationRules<T>): ValidationResult<TError> => {
     var errors: Errors = undefined
     for (const fieldName in validationRules) {
         if (!Object.prototype.hasOwnProperty.call(obj, fieldName)) {
@@ -137,7 +141,7 @@ const validateObject = <TError>(obj: any, validationRules: ValidationRules): Val
             errors[fieldName] = validateObject(childObj, fieldValidators).errorMessages as any
         }
 
-        if (fieldValidators) {
+        if (Array.isArray(fieldValidators)) {
             for (let index = 0; index < fieldValidators.length; index++) {
                 const fieldValidator = fieldValidators[index]
                 const value = obj[fieldName]
@@ -175,7 +179,7 @@ const validateObject = <TError>(obj: any, validationRules: ValidationRules): Val
  * @param validationRules the validation rules
  * @returns 
  */
-const validateField = <TError>(obj: any, fieldName: string, validationRules: ValidationRules): ValidationResult<TError> | undefined => {
+const validateField = <T, TError>(obj: any, fieldName: string, validationRules: ValidationRules<T>): ValidationResult<TError> | undefined => {
     var errors: Errors = undefined
     if (!fieldName) {
         console.error("nm-validator: The fieldName argument is required")

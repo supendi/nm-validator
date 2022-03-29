@@ -18,7 +18,7 @@ describe("Validate Object Test", () => {
             age: ""
         }
 
-        const rules: ValidationRules = {
+        const rules: ValidationRules<Registrant & any> = {
             name: [required("Name is required")],
             age: [
                 required("required"),
@@ -54,7 +54,7 @@ describe("Validate Object Test", () => {
             confirmPassword: ""
         }
 
-        const rules: ValidationRules = {
+        const rules: ValidationRules<Registrant> = {
             name: [required()],
         }
 
@@ -83,7 +83,7 @@ describe("Validate Object Test", () => {
             confirmPassword: ""
         }
 
-        const validationRule: ValidationRules = {
+        const validationRule: ValidationRules<Registrant> = {
             name: [
                 required("Name is required"),
                 minLength(3, "The minimum length is 3")
@@ -115,7 +115,7 @@ describe("Validate Object Test", () => {
             confirmPassword: ""
         }
 
-        const validationRule: ValidationRules = {
+        const validationRule: ValidationRules<Registrant> = {
             name: [
                 required("Name is required"),
                 minLength(3, "The minimum length is 3")
@@ -156,7 +156,7 @@ describe("Validate Object Test", () => {
             confirmPassword: ""
         }
 
-        const validationRule: ValidationRules = {
+        const validationRule: ValidationRules<Registrant> = {
             name: [
                 required("Name is required"),
                 maxLength(5, "The maximum length is 5")
@@ -187,7 +187,7 @@ describe("Validate Object Test", () => {
             age: 56
         }
 
-        const validationRule: ValidationRules = {
+        const validationRule: ValidationRules<typeof person> = {
             age: [
                 maxNumber(55, "The maximum age is 55")
             ],
@@ -216,7 +216,7 @@ describe("Validate Object Test", () => {
             age: 17
         }
 
-        const validationRule: ValidationRules = {
+        const validationRule: ValidationRules<typeof person> = {
             age: [
                 minNumber(18, "You cant access a porn site if you are under 18")
             ],
@@ -245,7 +245,7 @@ describe("Validate Object Test", () => {
             password: "cumaMisCall1"
         }
 
-        const validationRule: ValidationRules = {
+        const validationRule: ValidationRules<typeof loginRequest> = {
             password: [
                 regularExpression(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])([A-Za-z\d]|[^a-zA-Z\d]){8,}$/, "Your password must be at least 8 characters long, contain at least one special character, number and have a mixture of uppercase and lowercase letters.")
             ],
@@ -274,7 +274,7 @@ describe("Validate Object Test", () => {
             password: "cumaMisCall1!"
         }
 
-        const validationRule: ValidationRules = {
+        const validationRule: ValidationRules<typeof loginRequest> = {
             password: [
                 regularExpression(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])([A-Za-z\d]|[^a-zA-Z\d]){8,}$/, "Your password must be at least 8 characters long, contain at least one special character, number and have a mixture of uppercase and lowercase letters.")
             ],
@@ -298,7 +298,7 @@ describe("Validate Object Test", () => {
             confirmPassword: "cumaMisCall1"
         }
 
-        const validationRule: ValidationRules = {
+        const validationRule: ValidationRules<typeof changePassword> = {
             confirmPassword: [
                 equalTo("password")
             ],
@@ -331,7 +331,7 @@ describe("Validate Field Test", () => {
             confirmPassword: ""
         }
 
-        const validationRule: ValidationRules = {
+        const validationRule: ValidationRules<Registrant> = {
             name: [
                 required("Name is required"),
                 minLength(3, "The minimum length is 3")
@@ -384,7 +384,7 @@ describe("Validate Field Test", () => {
             value: 3.13,
         };
 
-        const validationRule: ValidationRules = {
+        const validationRule: ValidationRules<typeof pi> = {
             value: [mustBePi()],
         };
 
@@ -421,8 +421,9 @@ describe("Deep Validate Object Test", () => {
             }
         }
 
-        const rules: ValidationRules = {
+        const rules: ValidationRules<typeof company> = {
             name: [required("Name is required")],
+
             address: {
                 streetName: [
                     required("The street name is required")
@@ -490,7 +491,7 @@ describe("Deep Validate Field Test", () => {
             }
         }
 
-        const rules: ValidationRules = {
+        const rules: ValidationRules<typeof company> = {
             name: [required("Name is required")],
             address: {
                 streetName: [
