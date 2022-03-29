@@ -13,8 +13,8 @@
         "clean-test": "yarn clean && yarn test",
         "deep-clean": "yarn clean && rm -rf node_modules",
         "deep-clean-test": "yarn deep-clean && yarn install && yarn test",
-        "build": "yarn deep-clean && yarn install && tsc",
-        "version-patch": "yarn build && yarn test && npm version patch && git push"
+        "build": "yarn deep-clean && yarn install && tsc && yarn test",
+        "version-patch": "yarn build && npm version patch && git push"
     },
     "repository": {
         "type": "git",
