@@ -33,15 +33,11 @@ export type FieldValidator = {
     errorMessage: string
 }
 
-type KeyOf<T> = { [a in keyof T]?: FieldValidator[]
-    |
-    { [b in keyof KeyOf<T[a]>]?} }
-
 /**
  * Represents a collection of validation rules.
  * The validation schema should implement this type.
  */
-export type ValidationRules<T> = KeyOf<T>
+export type ValidationRules<T> = { [a in keyof T]?: FieldValidator[] | ValidationRules<T[a]> }
 
 /**
  * Represents the errors model of the validation result
