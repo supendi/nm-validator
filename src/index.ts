@@ -1,4 +1,4 @@
-export type Stringified<T> = { [x in keyof T]: string | T[x] }
+export type Stringified<T> = { [x in keyof T]: string | Stringified<T[x]> }
 /**
  * Helper function: joins array of string(error messages) as a single string
  * @param errors the errors to be joined as a single string
