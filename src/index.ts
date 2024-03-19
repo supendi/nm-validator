@@ -1,10 +1,10 @@
-
+export type Stringified<T> = { [x in keyof T]: string }
 /**
  * Helper function: joins array of string(error messages) as a single string
  * @param errors the errors to be joined as a single string
  * @returns 
  */
-const joinErrors = <TError>(errors: Errors): TError => {
+const joinErrors = <TError>(errors: Errors): Stringified<TError> => {
     var joinedErrors: any = undefined
     for (const key in errors) {
         if (Object.prototype.hasOwnProperty.call(errors, key)) {
@@ -21,7 +21,7 @@ const joinErrors = <TError>(errors: Errors): TError => {
             }
         }
     }
-    var result = joinedErrors as TError
+    var result = joinedErrors as Stringified<TError>
     return result
 }
 
@@ -50,7 +50,7 @@ export type Errors = { [y in keyof any]: string[] | { [y in keyof Errors]: any }
 export type ValidationResult<TError> = {
     isValid: boolean,
     errorMessages: Errors,
-    errors: TError
+    errors: Stringified<TError>
 }
 
 /**
@@ -123,7 +123,7 @@ const validateObject = <T, TError>(obj: any, validationRules: ValidationRules<T>
         const validatorOrRule = validationRules[fieldName]
         const isValidator = Array.isArray(validatorOrRule)
         const isValidationRule = !isValidator
- 
+
         if (isValidationRule) {
             if (!errors) {
                 errors = {}
