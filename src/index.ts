@@ -120,9 +120,11 @@ const setValue = (o, fieldName: string, value) => {
 const validateObject = <T, TError>(obj: any, validationRules: ValidationRules<T>): ValidationResult<TError> => {
     var errors: Errors = undefined
     for (const fieldName in validationRules) {
-        const fieldValidators = validationRules[fieldName]
+        const validatorOrRule = validationRules[fieldName]
+        const isValidator = Array.isArray(validatorOrRule)
+        const isValidationRule = !isValidator
  
-        if (!Array.isArray(fieldValidators)) {
+        if (isValidationRule) {
             if (!errors) {
                 errors = {}
             }
@@ -130,12 +132,12 @@ const validateObject = <T, TError>(obj: any, validationRules: ValidationRules<T>
                 errors[fieldName] = {}
             }
             const childObj = obj[fieldName]
-            errors[fieldName] = validateObject(childObj, fieldValidators).errorMessages as any
+            errors[fieldName] = validateObject(childObj, validatorOrRule).errorMessages as any
         }
 
-        if (Array.isArray(fieldValidators)) {
-            for (let index = 0; index < fieldValidators.length; index++) {
-                const fieldValidator = fieldValidators[index]
+        if (isValidator) {
+            for (let index = 0; index < validatorOrRule.length; index++) {
+                const fieldValidator = validatorOrRule[index]
                 const value = obj[fieldName]
                 if (fieldValidator && fieldValidator.validate) {
                     const isValid = fieldValidator.validate(value, obj)
