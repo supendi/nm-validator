@@ -507,7 +507,21 @@ describe("Deep Validate Object Test", () => {
 
 describe("Deep Validate Field Test", () => {
     it("should return 1 error of name", () => {
-        const company = {
+        interface Company {
+            name: string,
+            email: string,
+            address: {
+                streetName: string,
+                country: string,
+                person: {
+                    age: number
+                }
+            },
+            items: { name: string }[],
+            date: Date
+        }
+
+        const company: Company = {
             name: "",
             email: "irpan2gmail.com",
             address: {
@@ -517,7 +531,8 @@ describe("Deep Validate Field Test", () => {
                     age: 15
                 }
             },
-            items: []
+            items: [],
+            date: new Date()
         }
 
         const rules: ValidationRules<typeof company> = {
@@ -537,7 +552,12 @@ describe("Deep Validate Field Test", () => {
         }
 
         const actual = validator.validateField(company, "address.person.age", rules)
+        if (actual.errors.items === "") {
 
+        }
+        if (actual.errors.date === "") {
+
+        }
         const expected: ValidationResult<{
             address: {
                 person: {
