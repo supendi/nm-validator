@@ -1,27 +1,37 @@
-export type Stringified<T> = { [x in keyof T]: string | Stringified<T[x]> }
+
+export type StringifiedOf<T> = { [x in keyof T]: T[x] extends object ? StringifiedOf<T[x]> : string }
+
+/**
+ * Represents the errors model of the validation result
+ */
+// export type ArrayStringOf = { [y in keyof any]: string[] | { [y in keyof ArrayStringOf]: ArrayStringOf[y] } }
+
+export type ArrayStringOf<T> = { [y in keyof T]: T[y] extends object ? ArrayStringOf<T[y]> : string[] }
+
+
 /**
  * Helper function: joins array of string(error messages) as a single string
  * @param errors the errors to be joined as a single string
  * @returns 
  */
-const joinErrors = <TError>(errors: Errors): Stringified<TError> => {
-    var joinedErrors: any = undefined
+const StringifyErrors = <T>(errors: ArrayStringOf<T>): StringifiedOf<T> => {
+    var stringifiedErrors: StringifiedOf<T> = undefined
     for (const key in errors) {
         if (Object.prototype.hasOwnProperty.call(errors, key)) {
             const errorMessages = errors[key];
-            if (!joinedErrors) {
-                joinedErrors = {}
+            if (!stringifiedErrors) {
+                stringifiedErrors = {} as StringifiedOf<T>
             }
             if (Array.isArray(errorMessages)) {
-                joinedErrors[key] = errorMessages.join(" ")
+                stringifiedErrors[key as any] = errorMessages.join(" ")
             } else {
                 if (typeof (errorMessages) === "object") {
-                    joinedErrors[key] = joinErrors<TError>(errorMessages)
+                    stringifiedErrors[key as any] = StringifyErrors<T>(errorMessages as unknown as ArrayStringOf<T>)
                 }
             }
         }
     }
-    var result = joinedErrors as Stringified<TError>
+    var result = stringifiedErrors as StringifiedOf<T>
     return result
 }
 
@@ -39,18 +49,14 @@ export type FieldValidator = {
  */
 export type ValidationRules<T> = { [a in keyof T]?: FieldValidator[] | ValidationRules<T[a]> }
 
-/**
- * Represents the errors model of the validation result
- */
-export type Errors = { [y in keyof any]: string[] | { [y in keyof Errors]: any } }
 
 /**
  * Represents the model of validation result returned by the validateObject and the validationField method
  */
 export type ValidationResult<TError> = {
     isValid: boolean,
-    errorMessages: Errors,
-    errors: Stringified<TError>
+    errorMessages: ArrayStringOf<TError>,
+    errors: StringifiedOf<TError>
 }
 
 /**
@@ -117,22 +123,22 @@ const setValue = (o, fieldName: string, value) => {
  * @param validationRules the validation rules
  * @returns 
  */
-const validateObject = <T, TError>(obj: any, validationRules: ValidationRules<T>): ValidationResult<TError> => {
-    var errors: Errors = undefined
+const validateObject = <T>(obj: T, validationRules: ValidationRules<T>): ValidationResult<T> => {
+    var errors: ArrayStringOf<T> = undefined
     for (const fieldName in validationRules) {
         const validatorOrRule = validationRules[fieldName]
         const isValidator = Array.isArray(validatorOrRule)
-        const isValidationRule = !isValidator
+        const isObject = !isValidator
 
-        if (isValidationRule) {
+        if (isObject) {
             if (!errors) {
-                errors = {}
+                errors = {} as ArrayStringOf<T>
             }
             if (!errors[fieldName]) {
-                errors[fieldName] = {}
+                errors[fieldName as any] = {}
             }
             const childObj = obj[fieldName]
-            errors[fieldName] = validateObject(childObj, validatorOrRule).errorMessages as any
+            errors[fieldName as any] = validateObject(childObj, validatorOrRule).errorMessages
         }
 
         if (isValidator) {
@@ -143,14 +149,14 @@ const validateObject = <T, TError>(obj: any, validationRules: ValidationRules<T>
                     const isValid = fieldValidator.validate(value, obj)
                     if (!isValid) {
                         if (!errors) {
-                            errors = {}
+                            errors = {} as ArrayStringOf<T>
                         }
                         if (!errors[fieldName]) {
-                            errors[fieldName] = []
+                            errors[fieldName as any] = []
                         }
                         var errorMessage = fieldValidator.errorMessage
                         if (fieldValidator.errorMessage) {
-                            errorMessage = fieldValidator.errorMessage.replace(":value", value)
+                            errorMessage = fieldValidator.errorMessage.replace(":value", value as any)
                         }
                         if (!Array.isArray(fieldValidator.errorMessage)) {
                             (errors[fieldName] as string[]).push(errorMessage)
@@ -163,7 +169,7 @@ const validateObject = <T, TError>(obj: any, validationRules: ValidationRules<T>
     return {
         isValid: errors ? false : true,
         errorMessages: errors,
-        errors: joinErrors<TError>(errors)
+        errors: StringifyErrors<T>(errors)
     }
 }
 
@@ -173,8 +179,8 @@ const validateObject = <T, TError>(obj: any, validationRules: ValidationRules<T>
  * @param validationRules the validation rules
  * @returns 
  */
-const validateField = <T, TError>(obj: any, fieldName: string, validationRules: ValidationRules<T>): ValidationResult<TError> | undefined => {
-    var errors: Errors = undefined
+const validateField = <T>(obj: T, fieldName: string, validationRules: ValidationRules<T>): ValidationResult<T> | undefined => {
+    var errors: ArrayStringOf<T> = undefined
     if (!fieldName) {
         console.error("nm-validator: The fieldName argument is required")
         return undefined
@@ -193,7 +199,7 @@ const validateField = <T, TError>(obj: any, fieldName: string, validationRules: 
                 const isValid = fieldValidator.validate(value, obj)
                 if (!isValid) {
                     if (!errors) {
-                        errors = {}
+                        errors = {} as ArrayStringOf<T>
                     }
 
                     var errorMessage = fieldValidator.errorMessage
@@ -211,7 +217,7 @@ const validateField = <T, TError>(obj: any, fieldName: string, validationRules: 
     return {
         isValid: errors ? false : true,
         errorMessages: errors,
-        errors: joinErrors<TError>(errors)
+        errors: StringifyErrors<T>(errors)
     }
 }
 

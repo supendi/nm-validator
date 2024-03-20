@@ -59,6 +59,7 @@ describe("Validate Object Test", () => {
         }
 
         const actual = validator.validateObject(registrant, rules)
+
         const expected: ValidationResult<{
             name: string
         }> = {
@@ -90,6 +91,7 @@ describe("Validate Object Test", () => {
             ],
         }
         const actual = validator.validateObject(registrant, validationRule)
+
         const expected: ValidationResult<{
             name: string
         }> = {
@@ -323,7 +325,7 @@ describe("Validate Object Test", () => {
     it("Test missing property but required", () => {
         const registrant: Registrant & any = {
             names: "",
-        } 
+        }
         const rules: ValidationRules<Registrant> = {
             name: [required("Name is required")]
         }
