@@ -516,7 +516,8 @@ describe("Deep Validate Field Test", () => {
                 person: {
                     age: 15
                 }
-            }
+            },
+            items: []
         }
 
         const rules: ValidationRules<typeof company> = {
@@ -531,10 +532,12 @@ describe("Deep Validate Field Test", () => {
                 person: {
                     age: [minNumber(17)]
                 }
-            }
+            },
+            items: [minLength(1)]
         }
 
         const actual = validator.validateField(company, "address.person.age", rules)
+
         const expected: ValidationResult<{
             address: {
                 person: {

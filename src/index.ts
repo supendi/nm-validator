@@ -1,5 +1,5 @@
 
-export type StringifiedOf<T> = { [x in keyof T]: T[x] extends object ? StringifiedOf<T[x]> : string }
+export type StringifiedOf<T> = { [x in keyof T]: T[x] extends object ? T[x] extends Array<any> ? string : StringifiedOf<T[x]> : string }
 
 /**
  * Represents the errors model of the validation result
