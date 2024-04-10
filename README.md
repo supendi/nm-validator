@@ -1,5 +1,6 @@
 # nm-validator
-Validate your json object 
+This package is DEPRECATED.
+The REPLACEMENT for is: https://www.npmjs.com/package/ts-validity
 
 ## Installation
 ```
